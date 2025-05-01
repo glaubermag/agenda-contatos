@@ -1,94 +1,239 @@
 <template>
-  <form @submit.prevent="handleSubmit" class="space-y-4">
-    <BaseInput
-      id="name"
-      v-model="form.name"
-      label="Nome completo"
-      required
-      :error="errors.name"
-      placeholder="Digite o nome completo"
-    />
+  <BaseModal :show="show" @close="$emit('close')">
+    <template #title>
+      {{ contact ? 'Editar Contato' : 'Novo Contato' }}
+    </template>
+    
+    <template #content>
+      <form @submit.prevent="handleSubmit" class="space-y-6">
+        <!-- Informações básicas -->
+        <div class="space-y-4">
+          <div>
+            <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
+            <input
+              id="name"
+              v-model="form.name"
+              type="text"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
 
-    <BaseInput
-      id="email"
-      v-model="form.email"
-      type="email"
-      label="E-mail"
-      required
-      :error="errors.email"
-      placeholder="exemplo@email.com"
-    />
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700">Nome de usuário</label>
+            <input
+              id="username"
+              v-model="form.username"
+              type="text"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
 
-    <BaseInput
-      id="phone"
-      v-model="form.phone"
-      type="tel"
-      label="Telefone"
-      required
-      :error="errors.phone"
-      placeholder="(00) 00000-0000"
-    />
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              id="email"
+              v-model="form.email"
+              type="email"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
 
-    <button
-      type="submit"
-      class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
-    >
-      Adicionar Contato
-    </button>
-  </form>
+          <div>
+            <label for="phone" class="block text-sm font-medium text-gray-700">Telefone</label>
+            <input
+              id="phone"
+              v-model="form.phone"
+              type="tel"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
+            <input
+              id="website"
+              :value="form.website"
+              type="text"
+              pattern="^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$"
+              @input="handleWebsiteInput"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+
+        <!-- Endereço -->
+        <div class="space-y-4">
+          <h4 class="font-medium text-gray-900">Endereço</h4>
+          
+          <div>
+            <label for="street" class="block text-sm font-medium text-gray-700">Rua</label>
+            <input
+              id="street"
+              v-model="form.address.street"
+              type="text"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label for="suite" class="block text-sm font-medium text-gray-700">Complemento</label>
+            <input
+              id="suite"
+              v-model="form.address.suite"
+              type="text"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label for="city" class="block text-sm font-medium text-gray-700">Cidade</label>
+            <input
+              id="city"
+              v-model="form.address.city"
+              type="text"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label for="zipcode" class="block text-sm font-medium text-gray-700">CEP</label>
+            <input
+              id="zipcode"
+              v-model="form.address.zipcode"
+              type="text"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+
+        <!-- Empresa -->
+        <div class="space-y-4">
+          <h4 class="font-medium text-gray-900">Empresa</h4>
+          
+          <div>
+            <label for="companyName" class="block text-sm font-medium text-gray-700">Nome da Empresa</label>
+            <input
+              id="companyName"
+              v-model="form.company.name"
+              type="text"
+              required
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label for="catchPhrase" class="block text-sm font-medium text-gray-700">Slogan</label>
+            <input
+              id="catchPhrase"
+              v-model="form.company.catchPhrase"
+              type="text"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label for="bs" class="block text-sm font-medium text-gray-700">BS</label>
+            <input
+              id="bs"
+              v-model="form.company.bs"
+              type="text"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            />
+          </div>
+        </div>
+
+        <!-- Botões -->
+        <div class="flex justify-end space-x-3">
+          <button
+            type="button"
+            @click="$emit('close')"
+            class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            {{ contact ? 'Salvar' : 'Criar' }}
+          </button>
+        </div>
+      </form>
+    </template>
+  </BaseModal>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useContactsStore } from '../../stores/contacts'
-import BaseInput from '../base/BaseInput.vue'
+import { ref, onMounted, watch } from 'vue'
+import type { Contact } from '../../types/contact'
+import BaseModal from '../base/BaseModal.vue'
 
-const store = useContactsStore()
-const form = ref({
+const props = defineProps<{
+  show: boolean
+  contact?: Contact
+}>()
+
+const emit = defineEmits<{
+  (e: 'close'): void
+  (e: 'save', contact: Contact | Omit<Contact, 'id'>): void
+}>()
+
+const emptyForm = {
   name: '',
+  username: '',
   email: '',
-  phone: ''
-})
-
-const errors = ref({
-  name: '',
-  email: '',
-  phone: ''
-})
-
-const validateForm = () => {
-  let isValid = true
-  errors.value = {
+  phone: '',
+  website: '',
+  address: {
+    street: '',
+    suite: '',
+    city: '',
+    zipcode: '',
+    geo: {
+      lat: '0',
+      lng: '0'
+    }
+  },
+  company: {
     name: '',
-    email: '',
-    phone: ''
+    catchPhrase: '',
+    bs: ''
   }
+}
 
-  if (!form.value.name) {
-    errors.value.name = 'Nome é obrigatório'
-    isValid = false
+const form = ref({ ...emptyForm })
+
+// Observa mudanças no contato e atualiza o formulário
+watch(() => props.contact, (newContact) => {
+  if (newContact) {
+    form.value = { ...newContact }
+  } else {
+    form.value = { ...emptyForm }
   }
+}, { immediate: true })
 
-  if (!form.value.email) {
-    errors.value.email = 'E-mail é obrigatório'
-    isValid = false
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.value.email)) {
-    errors.value.email = 'E-mail inválido'
-    isValid = false
+const urlPattern = '^(https?:\\/\\/)?(([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$'
+
+const handleWebsiteInput = (event: Event) => {
+  const input = event.target as HTMLInputElement
+  let value = input.value.trim()
+  
+  // Se não começar com http:// ou https://, adiciona https://
+  if (value && !value.match(/^https?:\/\//)) {
+    value = 'https://' + value
   }
-
-  if (!form.value.phone) {
-    errors.value.phone = 'Telefone é obrigatório'
-    isValid = false
-  }
-
-  return isValid
+  
+  form.value.website = value
 }
 
 const handleSubmit = () => {
-  if (validateForm()) {
-    store.addContact(form.value)
-    form.value = { name: '', email: '', phone: '' }
-  }
+  emit('save', props.contact ? { ...form.value, id: props.contact.id } : form.value)
 }
 </script>

@@ -9,7 +9,11 @@
       leave-to-class="opacity-0"
     >
       <div v-if="show" class="fixed inset-0 z-10">
-        <div class="modal-backdrop fixed inset-0 bg-black bg-opacity-75" @click="$emit('close')" />
+        <div 
+          class="modal-backdrop fixed inset-0 bg-black bg-opacity-75" 
+          @click="handleClose"
+          aria-hidden="true"
+        />
       </div>
     </Transition>
 
@@ -24,23 +28,25 @@
       <div 
         v-if="show" 
         class="fixed inset-0 z-20 overflow-y-auto" 
-        @click.self="$emit('close')"
-        @keydown.esc="$emit('close')"
+        @click.self="handleClose"
+        @keydown.esc="handleClose"
         ref="modalRef"
-        tabindex="-1"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
       >
         <div class="flex min-h-full items-center justify-center p-4">
           <div 
             class="modal-content relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8 sm:w-full sm:max-w-lg"
-            role="dialog"
-            aria-modal="true"
           >
             <!-- Cabeçalho do Modal -->
             <div class="modal-header border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-              <slot name="title"></slot>
+              <h3 id="modal-title" class="text-lg font-medium text-gray-900">
+                <slot name="title"></slot>
+              </h3>
               <button
-                @click="$emit('close')"
-                class="close text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                @click="handleClose"
+                class="close text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-lg p-1"
                 aria-label="Fechar modal"
               >
                 <span class="sr-only">Fechar</span>
@@ -51,7 +57,7 @@
             </div>
 
             <!-- Conteúdo do Modal -->
-            <div class="modal-body px-6 py-4">
+            <div class="modal-body px-6 py-4 bg-white">
               <slot name="content"></slot>
             </div>
           </div>
@@ -62,86 +68,83 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, nextTick, computed } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 
 const props = defineProps<{
   show: boolean
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
 const modalRef = ref<HTMLElement | null>(null)
 let previousActiveElement: HTMLElement | null = null
 
-// Função para encontrar elementos focáveis dentro do modal
+const handleClose = () => {
+  emit('close')
+}
+
+// Gerenciamento de foco
 const getFocusableElements = () => {
   if (!modalRef.value) return []
   return Array.from(
-    modalRef.value.querySelectorAll<HTMLElement>(
+    modalRef.value.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     )
-  )
+  ) as HTMLElement[]
 }
 
-// Função para gerenciar o trap focus
-const handleTabKey = (e: KeyboardEvent) => {
-  if (!modalRef.value || e.key !== 'Tab') return
+const handleTab = (e: KeyboardEvent) => {
+  if (!modalRef.value) return
 
-  const focusableElements = getFocusableElements()
-  const firstFocusable = focusableElements[0]
-  const lastFocusable = focusableElements[focusableElements.length - 1]
+  const focusable = getFocusableElements()
+  if (focusable.length === 0) return
 
-  // Shift + Tab
+  const firstFocusable = focusable[0]
+  const lastFocusable = focusable[focusable.length - 1]
+
   if (e.shiftKey) {
     if (document.activeElement === firstFocusable) {
+      lastFocusable.focus()
       e.preventDefault()
-      lastFocusable?.focus()
     }
-  } 
-  // Tab
-  else {
+  } else {
     if (document.activeElement === lastFocusable) {
+      firstFocusable.focus()
       e.preventDefault()
-      firstFocusable?.focus()
     }
   }
 }
 
-// Observa mudanças na prop show
-watch(() => props.show, (newValue) => {
+const handleKeydown = (e: KeyboardEvent) => {
+  if (e.key === 'Tab') {
+    handleTab(e)
+  } else if (e.key === 'Escape') {
+    handleClose()
+  }
+}
+
+// Gerenciamento do ciclo de vida do modal
+watch(() => props.show, async (newValue) => {
   if (newValue) {
     previousActiveElement = document.activeElement as HTMLElement
-    nextTick(() => {
-      modalRef.value?.focus()
-      const focusableElements = getFocusableElements()
-      if (focusableElements.length > 0) {
-        focusableElements[0].focus()
-      }
-    })
+    await nextTick()
+    const focusable = getFocusableElements()
+    if (focusable.length > 0) {
+      focusable[0].focus()
+    }
+    document.addEventListener('keydown', handleKeydown)
   } else {
+    document.removeEventListener('keydown', handleKeydown)
     if (previousActiveElement) {
       previousActiveElement.focus()
     }
   }
 })
 
-onMounted(() => {
-  if (modalRef.value) {
-    modalRef.value.addEventListener('keydown', handleTabKey)
-  }
-})
-
 onUnmounted(() => {
-  if (modalRef.value) {
-    modalRef.value.removeEventListener('keydown', handleTabKey)
-  }
-})
-
-// Add reduce motion check
-const reduceMotion = computed(() => {
-  return document.documentElement.classList.contains('reduce-motion')
+  document.removeEventListener('keydown', handleKeydown)
 })
 </script>
 

@@ -21,7 +21,11 @@
     >
       <template #title>Adicionar Novo Contato</template>
       <template #content>
-        <ContactForm @submit="handleFormSubmit" />
+        <ContactForm 
+          :show="showForm"
+          @close="handleCloseModal"
+          @save="handleFormSubmit" 
+        />
       </template>
     </BaseModal>
   </div>
@@ -32,14 +36,21 @@ import { ref } from 'vue'
 import ContactList from '../components/ContactList.vue'
 import ContactForm from '../components/contacts/ContactForm.vue'
 import BaseModal from '../components/base/BaseModal.vue'
+import { useContactsStore } from '../stores/contacts'
 
+const store = useContactsStore()
 const showForm = ref(false)
 
 const handleCloseModal = () => {
   showForm.value = false
 }
 
-const handleFormSubmit = () => {
-  showForm.value = false
+const handleFormSubmit = async (contact: Omit<Contact, 'id'>) => {
+  try {
+    await store.createContact(contact)
+    showForm.value = false
+  } catch (error) {
+    console.error('Erro ao criar contato:', error)
+  }
 }
 </script>
