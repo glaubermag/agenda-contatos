@@ -36,56 +36,78 @@ Uma aplicação moderna e acessível para gerenciamento de contatos, desenvolvid
    ```bash
    git clone https://github.com/glauber-mag/agenda-contatos.git
    cd agenda-contatos
-   Instale as dependências:
-   bash
-   Run
+   ```
+
+2. Instale as dependências:
+   ```bash
    npm install
-   Inicie o json-server (em um terminal separado):
-   bash
-   Run
+   ```
+
+3. Inicie o json-server (em um terminal separado):
+   ```bash
    npm run json-server
-   Inicie a aplicação em modo de desenvolvimento:
-   bash
-   Run
+   ```
+
+4. Inicie a aplicação em modo de desenvolvimento:
+   ```bash
    npm run dev
-   🧪 Executando os Testes
-   Para executar os testes unitários:
-   
-   bash
-   Run
-   npm run test
-   🌟 Recursos de Acessibilidade
-   Alto Contraste
-   Ative pressionando o botão "Acessibilidade" ou usando o atalho Alt + A
-   Melhora a legibilidade para usuários com deficiência visual
-   Tamanho da Fonte
-   Ajuste o tamanho da fonte de 80% até 150%
-   Controles intuitivos com botões A+ e A-
-   Redução de Movimento
-   Remove animações e transições
-   Ideal para usuários com sensibilidade a movimento
-   Navegação por Teclado
-   Suporte completo para navegação via teclado
-   Indicadores visuais de foco
-   Atalhos de teclado para funções principais
-   📝 Estrutura do Projeto
-   plaintext
-   
-   agenda-contatos/├── src/│   ├── components/│   │   ├── accessibility/    # Componentes de acessibilidade│   │   ├── base/            # Componentes base reutilizáveis│   │   ├── contacts/        # Componentes específicos de contatos│   ├── styles/              # Estilos globais e utilitários│   ├── tests/               # Testes unitários│   ├── views/               # Componentes de página│   └── App.vue             # Componente raiz├── public/                  # Arquivos públicos└── package.json            # Dependências e scripts
-   🤝 Contribuindo
-   Faça o fork do projeto
-   Crie sua branch de feature (git checkout -b feature/AmazingFeature)
-   Commit suas mudanças (git commit -m 'Add some AmazingFeature')
-   Push para a branch (git push origin feature/AmazingFeature)
-   Abra um Pull Request
-   📄 Licença
-   Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
-   
-   🎯 Próximos Passos
-   Implementação de busca e filtros
-   Exportação de contatos
-   Temas personalizáveis
-   Sincronização com serviços externos
-   Suporte para múltiplos idiomas
-   📞 Suporte
-   Para reportar bugs ou sugerir novas funcionalidades, por favor abra uma issue no repositório.
+   ```
+
+## 🧪 Executando os Testes
+
+Para executar os testes unitários:
+```bash
+npm run test
+```
+
+## 🌟 Recursos de Acessibilidade
+
+- **Alto Contraste**
+  - Ative pressionando o botão "Acessibilidade" ou usando o atalho Alt + A
+  - Melhora a legibilidade para usuários com deficiência visual
+
+- **Tamanho da Fonte**
+  - Ajuste o tamanho da fonte de 80% até 150%
+  - Controles intuitivos com botões A+ e A-
+
+- **Redução de Movimento**
+  - Remove animações e transições
+  - Ideal para usuários com sensibilidade a movimento
+
+- **Navegação por Teclado**
+  - Suporte completo para navegação via teclado
+  - Indicadores visuais de foco
+  - Atalhos de teclado para funções principais
+
+## 📝 Estrutura do Projeto
+
+```plaintext
+agenda-contatos/
+├── src/
+│   ├── components/
+│   │   ├── accessibility/    # Componentes de acessibilidade
+│   │   ├── base/            # Componentes base reutilizáveis
+│   │   ├── contacts/        # Componentes específicos de contatos
+│   ├── styles/              # Estilos globais e utilitários
+│   ├── tests/               # Testes unitários
+│   ├── views/               # Componentes de página
+│   └── App.vue             # Componente raiz
+├── public/                  # Arquivos públicos
+└── package.json            # Dependências e scripts
+```
+
+## 🤝 Contribuindo
+
+- Faça o fork do projeto
+- Crie sua branch de feature (git checkout -b feature/AmazingFeature)
+- Commit suas mudanças (git commit -m 'Add some AmazingFeature')
+- Push para a branch (git push origin feature/AmazingFeature)
+- Abra um Pull Request
+
+## 📄 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
+
+
+
+
