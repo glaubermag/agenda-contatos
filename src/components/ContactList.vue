@@ -166,15 +166,6 @@ onMounted(() => {
   store.fetchContacts()
 })
 
-const handleNewContact = async (contact: Omit<Contact, 'id'>) => {
-  try {
-    await store.createContact(contact)
-    store.closeNewContactModal()
-  } catch (error) {
-    // Erro já tratado na store
-  }
-}
-
 const handleEditContact = async (contact: Contact | Omit<Contact, 'id'>) => {
   try {
     if ('id' in contact) {

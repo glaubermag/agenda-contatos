@@ -66,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { ref, onUnmounted, watch, nextTick } from 'vue'
 
 const props = defineProps<{
   show: boolean
@@ -166,12 +166,10 @@ onUnmounted(() => {
   opacity: 1;
 }
 
-<style scoped>
 .modal-overlay {
   background-color: rgba(0, 0, 0, 0.5) !important; /* Cor padrão para todos os modais */
 }
 
-/* Mantenha o mesmo z-index para consistência */
 .modal-container {
   z-index: 9999;
 }

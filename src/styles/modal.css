@@ -43,17 +43,28 @@ button:hover {
 }
 
 @media (prefers-contrast: more) {
-  button, 
-  .btn-acessibilidade, 
-  .btn-novo-contato {
+  /* Aumentando a especificidade para sobrescrever classes do Tailwind */
+  button[class*="bg-"], 
+  .btn-acessibilidade[class*="bg-"], 
+  .btn-novo-contato[class*="bg-"],
+  [class*="bg-blue"] {
     background-color: #1d4ed8 !important;
     border: 2px solid #000 !important;
     color: #fff !important;
   }
   
-  button:hover,
-  .btn-acessibilidade:hover, 
-  .btn-novo-contato:hover {
+  button[class*="bg-"]:hover,
+  .btn-acessibilidade[class*="bg-"]:hover, 
+  .btn-novo-contato[class*="bg-"]:hover,
+  [class*="bg-blue"]:hover {
     background-color: #1e40af !important;
+  }
+
+  /* Garantindo que os botões específicos também recebam o estilo */
+  .btn-acessibilidade,
+  .btn-novo-contato {
+    background-color: #1d4ed8 !important;
+    border: 2px solid #000 !important;
+    color: #fff !important;
   }
 }
