@@ -9,23 +9,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Atualizado para versão mais recente
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'  # Usar Node.js 20 (LTS recomendado)
+          cache: 'npm'  # Habilita cache para npm
 
-      - name: Install dependencies
+      - name: Limpar dependências corrompidas
+        run: |
+          rm -rf node_modules
+          rm -f package-lock.json
+          npm cache clean --force
+
+      - name: Instalar dependências
         run: npm install
 
-      - name: Build
+      - name: Build do projeto
         run: npm run build
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Deploy para GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4  # Versão atualizada
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: gh-pages
-          force_orphan: true 
+          force_orphan: true
