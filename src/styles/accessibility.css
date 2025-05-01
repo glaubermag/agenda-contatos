@@ -1,0 +1,54 @@
+/* Modo alto contraste */
+.high-contrast {
+  --bg-primary: #000000;
+  --text-primary: #ffffff;
+  --bg-secondary: #333333;
+  --border-color: #ffffff;
+  --accent-color: #ffff00;
+}
+
+.high-contrast body {
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+.high-contrast .bg-white {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.high-contrast .text-gray-900,
+.high-contrast .text-gray-700,
+.high-contrast .text-gray-600 {
+  color: var(--text-primary) !important;
+}
+
+.high-contrast button {
+  border: 2px solid var(--border-color) !important;
+}
+
+.high-contrast input,
+.high-contrast select,
+.high-contrast textarea {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--border-color) !important;
+}
+
+/* Redução de movimento */
+.reduce-motion * {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Ajustes de fonte responsivos */
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Agenda Contatos</string>
+    <string name="title_activity_main">Agenda Contatos</string>
+    <string name="package_name">com.agenda.contatos</string>
+    <string name="custom_url_scheme">com.agenda.contatos</string>
+</resources>
