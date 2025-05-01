@@ -3,6 +3,14 @@ import { mount } from '@vue/test-utils'
 import BaseButton from '../components/base/BaseButton.vue'
 
 describe('BaseButton', () => {
+  it('renders with correct size class', () => {
+    const wrapper = mount(BaseButton, {
+      props: { size: 'small' }
+    })
+    expect(wrapper.classes()).toContain('text-sm')
+    expect(wrapper.classes()).toContain('px-3')
+    expect(wrapper.classes()).toContain('py-1.5')
+  })
   it('should render with default props', () => {
     const wrapper = mount(BaseButton)
     expect(wrapper.attributes('type')).toBe('button')
@@ -22,13 +30,5 @@ describe('BaseButton', () => {
     })
     expect(wrapper.attributes('disabled')).toBeDefined()
     expect(wrapper.classes()).toContain('opacity-50')
-  })
-
-  it('should render different sizes', () => {
-    const wrapper = mount(BaseButton, {
-      props: { size: 'sm' }
-    })
-    expect(wrapper.classes()).toContain('px-3')
-    expect(wrapper.classes()).toContain('py-1.5')
   })
 })

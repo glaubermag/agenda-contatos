@@ -8,13 +8,11 @@
       leave-from-class="opacity-100"
       leave-to-class="opacity-0"
     >
-      <div v-if="show" class="fixed inset-0 z-10">
-        <div 
-          class="modal-backdrop fixed inset-0 bg-black bg-opacity-75" 
-          @click="handleClose"
-          aria-hidden="true"
-        />
-      </div>
+      <div 
+        v-if="show"
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+        @click="handleClose"
+      />
     </Transition>
 
     <Transition
@@ -25,23 +23,23 @@
       leave-from-class="opacity-100 translate-y-0 sm:scale-100"
       leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
     >
-      <div 
-        v-if="show" 
-        class="fixed inset-0 z-20 overflow-y-auto" 
-        @click.self="handleClose"
+      <div
+        v-if="show"
+        class="fixed inset-0 z-10 overflow-y-auto"
         @keydown.esc="handleClose"
-        ref="modalRef"
         role="dialog"
         aria-modal="true"
-        aria-labelledby="modal-title"
+        :aria-labelledby="modalTitleId"
       >
-        <div class="flex min-h-full items-center justify-center p-4">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <div 
-            class="modal-content relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8 sm:w-full sm:max-w-lg"
+            class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6"
+            ref="modalContent"
+            @click.stop
           >
             <!-- Cabeçalho do Modal -->
             <div class="modal-header border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-              <h3 id="modal-title" class="text-lg font-medium text-gray-900">
+              <h3 :id="modalTitleId" class="text-lg font-medium text-gray-900">
                 <slot name="title"></slot>
               </h3>
               <button
@@ -78,67 +76,63 @@ const emit = defineEmits<{
   (e: 'close'): void
 }>()
 
-const modalRef = ref<HTMLElement | null>(null)
-let previousActiveElement: HTMLElement | null = null
+const modalContent = ref<HTMLElement | null>(null)
+const modalTitleId = `modal-title-${Math.random().toString(36).substr(2, 9)}`
+const previousActiveElement = ref<HTMLElement | null>(null)
 
 const handleClose = () => {
   emit('close')
 }
 
-// Gerenciamento de foco
-const getFocusableElements = () => {
-  if (!modalRef.value) return []
-  return Array.from(
-    modalRef.value.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )
-  ) as HTMLElement[]
-}
-
-const handleTab = (e: KeyboardEvent) => {
-  if (!modalRef.value) return
-
-  const focusable = getFocusableElements()
-  if (focusable.length === 0) return
-
-  const firstFocusable = focusable[0]
-  const lastFocusable = focusable[focusable.length - 1]
-
-  if (e.shiftKey) {
-    if (document.activeElement === firstFocusable) {
-      lastFocusable.focus()
-      e.preventDefault()
-    }
-  } else {
-    if (document.activeElement === lastFocusable) {
-      firstFocusable.focus()
-      e.preventDefault()
-    }
-  }
-}
-
 const handleKeydown = (e: KeyboardEvent) => {
   if (e.key === 'Tab') {
-    handleTab(e)
-  } else if (e.key === 'Escape') {
+    const focusableElements = modalContent.value?.querySelectorAll(
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+    )
+    
+    if (focusableElements && focusableElements.length > 0) {
+      const firstElement = focusableElements[0] as HTMLElement
+      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
+      
+      if (e.shiftKey && document.activeElement === firstElement) {
+        lastElement.focus()
+        e.preventDefault()
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        firstElement.focus()
+        e.preventDefault()
+      }
+    }
+  } else if (e.key === 'Escape' && props.show) {
     handleClose()
   }
 }
 
-// Gerenciamento do ciclo de vida do modal
-watch(() => props.show, async (newValue) => {
-  if (newValue) {
-    previousActiveElement = document.activeElement as HTMLElement
-    await nextTick()
-    const focusable = getFocusableElements()
-    if (focusable.length > 0) {
-      focusable[0].focus()
+const focusFirstInput = () => {
+  const firstInput = modalContent.value?.querySelector(
+    'input, button, [tabindex]:not([tabindex="-1"])'
+  )
+  if (firstInput) {
+    (firstInput as HTMLElement).focus()
+  } else {
+    // Fallback para o botão de fechar se nenhum outro elemento for encontrado
+    const closeButton = modalContent.value?.querySelector('.close')
+    if (closeButton) {
+      (closeButton as HTMLElement).focus()
     }
+  }
+}
+
+watch(() => props.show, (newValue) => {
+  if (newValue) {
+    previousActiveElement.value = document.activeElement as HTMLElement
     document.addEventListener('keydown', handleKeydown)
+    nextTick(() => {
+      focusFirstInput()
+    })
   } else {
     document.removeEventListener('keydown', handleKeydown)
-    if (previousActiveElement) {
-      previousActiveElement.focus()
+    if (previousActiveElement.value) {
+      previousActiveElement.value.focus()
     }
   }
 })
@@ -170,5 +164,15 @@ onUnmounted(() => {
 :root.reduce-motion .modal-enter-from,
 :root.reduce-motion .modal-leave-to {
   opacity: 1;
+}
+
+<style scoped>
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.5) !important; /* Cor padrão para todos os modais */
+}
+
+/* Mantenha o mesmo z-index para consistência */
+.modal-container {
+  z-index: 9999;
 }
 </style>

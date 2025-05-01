@@ -9,7 +9,12 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
-    "json-server": "json-server --watch db.json --port 3000"
+    "json-server": "json-server --watch db.json --port 3000",
+    "copy-web": "rimraf android/app/src/main/assets/www && cp -r dist/* android/app/src/main/assets/www",
+    "android": "npm run build && npm run copy-web && npx cap open android",
+    "android:livereload": "npm run build && npm run copy-web && npx cap run android -l --address=auto",
+    "ios": "npm run build && npm run copy-web && npx cap open ios",
+    "ios:livereload": "npm run build && npm run copy-web && npx cap run ios -l --address=auto"
   },
   "dependencies": {
     "@capacitor/android": "^7.2.0",
@@ -20,12 +25,13 @@
     "@heroicons/vue": "^2.2.0",
     "axios": "^1.9.0",
     "pinia": "^3.0.2",
-    "vite": "^5.0.12",
+    "vite": "^6.3.4",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@testing-library/vue": "^8.1.0",
+    "@types/jest": "^29.5.14",
     "@types/node": "^20.11.10",
     "@vitejs/plugin-vue": "^5.0.3",
     "@vitest/coverage-istanbul": "^3.1.2",
@@ -34,9 +40,10 @@
     "jsdom": "^26.1.0",
     "json-server": "^0.17.3",
     "postcss": "^8.4.35",
+    "rimraf": "^5.0.10",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.0.2",
+    "typescript": "^5.8.3",
     "vitest": "^3.1.2",
-    "vue-tsc": "^1.8.5"
+    "vue-tsc": "^2.2.10"
   }
 }

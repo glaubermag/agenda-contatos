@@ -1,145 +1,143 @@
 import { defineStore } from 'pinia'
+
+import { ref, computed, type Ref } from 'vue'
 import type { Contact } from '../types/contact'
 import { contactService } from '../services/contactService'
 
-interface ContactsState {
-  contacts: Contact[]
-  selectedContact: Contact | null
-  searchQuery: string
-  loading: boolean
-  error: string | null
-  showContactModal: boolean
-  showDeleteModal: boolean
-  showEditModal: boolean
-  showNewContactModal: boolean
-}
+export const useContactsStore = defineStore('contacts', () => {
+  const selectedContact: Ref<Contact | null> = ref(null)
+  const contacts: Ref<Contact[]> = ref([])
+  const searchQuery = ref('')
+  const loading = ref(false)
+  const error = ref<string | null>(null)
+  const showContactModal = ref(false)
+  const showDeleteModal = ref(false)
+  const showEditModal = ref(false)
+  const showNewContactModal = ref(false)
 
-export const useContactsStore = defineStore('contacts', {
-  state: (): ContactsState => ({
-    contacts: [],
-    selectedContact: null,
-    searchQuery: '',
-    loading: false,
-    error: null,
-    showContactModal: false,
-    showDeleteModal: false,
-    showEditModal: false,
-    showNewContactModal: false
-  }),
-  
-  getters: {
-    filteredContacts: (state) => {
-      const query = state.searchQuery.toLowerCase()
-      return state.contacts.filter(contact => 
-        contact.name.toLowerCase().includes(query) ||
-        contact.email.toLowerCase().includes(query) ||
-        contact.phone.toLowerCase().includes(query)
-      )
+  // Actions
+  const fetchContacts = async () => {
+    loading.value = true
+    error.value = null
+    try {
+      contacts.value = await contactService.getAll()
+    } catch (err) {
+      error.value = 'Failed to fetch contacts'
+    } finally {
+      loading.value = false
     }
-  },
-  
-  actions: {
-    // Modal actions
-    openNewContactModal() {
-      this.showNewContactModal = true
-    },
+  }
 
-    closeNewContactModal() {
-      this.showNewContactModal = false
-    },
-
-    openContactDetails(contact: Contact) {
-      this.selectedContact = contact
-      this.showContactModal = true
-    },
-
-    closeContactDetails() {
-      this.selectedContact = null
-      this.showContactModal = false
-    },
-
-    openEditModal(contact: Contact) {
-      this.selectedContact = contact
-      this.showEditModal = true
-    },
-
-    closeEditModal() {
-      this.selectedContact = null
-      this.showEditModal = false
-    },
-
-    openDeleteModal(contact: Contact) {
-      this.selectedContact = contact
-      this.showDeleteModal = true
-    },
-
-    closeDeleteModal() {
-      this.selectedContact = null
-      this.showDeleteModal = false
-    },
-
-    // API actions
-    async fetchContacts() {
-      this.loading = true
-      this.error = null
-      try {
-        this.contacts = await contactService.getAll()
-      } catch (error) {
-        this.error = 'Erro ao carregar contatos'
-        console.error('Erro ao buscar contatos:', error)
-      } finally {
-        this.loading = false
-      }
-    },
-
-    async createContact(contact: Omit<Contact, 'id'>) {
-      this.loading = true
-      this.error = null
-      try {
-        const newContact = await contactService.create(contact)
-        this.contacts.unshift(newContact)
-      } catch (error) {
-        this.error = 'Erro ao criar contato'
-        console.error('Erro ao criar contato:', error)
-        throw error
-      } finally {
-        this.loading = false
-      }
-    },
-
-    async updateContact(id: number, contact: Partial<Contact>) {
-      this.loading = true
-      this.error = null
-      try {
-        const updatedContact = await contactService.update(id, contact)
-        const index = this.contacts.findIndex(c => c.id === id)
-        if (index !== -1) {
-          this.contacts[index] = updatedContact
-        }
-        this.closeEditModal()
-      } catch (error) {
-        this.error = 'Erro ao atualizar contato'
-        console.error('Erro ao atualizar contato:', error)
-        throw error
-      } finally {
-        this.loading = false
-      }
-    },
-
-    async deleteContact(id: number) {
-      this.loading = true
-      this.error = null
-      try {
-        await contactService.delete(id)
-        this.contacts = this.contacts.filter(c => c.id !== id)
-        this.closeDeleteModal()
-      } catch (error) {
-        this.error = 'Erro ao excluir contato'
-        console.error('Erro ao excluir contato:', error)
-        throw error
-      } finally {
-        this.loading = false
-      }
+  const createContact = async (contact: Omit<Contact, 'id'>) => {
+    loading.value = true
+    error.value = null
+    try {
+      const newContact = await contactService.create(contact)
+      contacts.value.push(newContact)
+      closeNewContactModal()
+    } catch (err) {
+      error.value = 'Failed to create contact'
+    } finally {
+      loading.value = false
     }
+  }
+
+  const updateContact = async (id: number, contact: Contact) => {
+    loading.value = true
+    error.value = null
+    try {
+      const updatedContact = await contactService.update(id, contact)
+      const index = contacts.value.findIndex(c => c.id === id)
+      if (index !== -1) {
+        contacts.value[index] = updatedContact
+      }
+      closeEditModal()
+    } catch (err) {
+      error.value = 'Failed to update contact'
+    } finally {
+      loading.value = false
+    }
+  }
+
+  const deleteContact = async (id: number) => {
+    loading.value = true
+    error.value = null
+    try {
+      await contactService.delete(id)
+      contacts.value = contacts.value.filter(c => c.id !== id)
+      closeDeleteModal()
+    } catch (err) {
+      error.value = 'Failed to delete contact'
+    } finally {
+      loading.value = false
+    }
+  }
+
+  // Modal actions
+  const closeNewContactModal = () => {
+    showNewContactModal.value = false
+  }
+
+  const closeEditModal = () => {
+    selectedContact.value = null
+    showEditModal.value = false
+  }
+
+  const closeDeleteModal = () => {
+    selectedContact.value = null
+    showDeleteModal.value = false
+  }
+
+  // Add computed property for filtered contacts
+  const filteredContacts = computed(() => {
+    return contacts.value.filter(contact => 
+      contact.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      contact.email.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+  })
+
+  // Add missing modal actions
+  const openContactDetails = (contact: Contact) => {
+    selectedContact.value = contact
+    showContactModal.value = true
+  }
+
+  const closeContactDetails = () => {
+    selectedContact.value = null
+    showContactModal.value = false
+  }
+
+  const openEditModal = (contact: Contact) => {
+    selectedContact.value = contact
+    showEditModal.value = true
+  }
+
+  const openDeleteModal = (contact: Contact) => {
+    selectedContact.value = contact
+    showDeleteModal.value = true
+  }
+
+  return {
+    selectedContact,
+    contacts,
+    searchQuery,
+    loading,
+    error,
+    showContactModal,
+    showDeleteModal,
+    showEditModal,
+    showNewContactModal,
+    fetchContacts,
+    createContact,
+    updateContact,
+    deleteContact,
+    closeNewContactModal,
+    closeEditModal,
+    closeDeleteModal,
+    filteredContacts,
+    openContactDetails,
+    closeContactDetails,
+    openEditModal,
+    openDeleteModal
   }
 })

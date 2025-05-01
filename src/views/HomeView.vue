@@ -37,6 +37,7 @@ import ContactList from '../components/ContactList.vue'
 import ContactForm from '../components/contacts/ContactForm.vue'
 import BaseModal from '../components/base/BaseModal.vue'
 import { useContactsStore } from '../stores/contacts'
+import type { Contact } from '../types/contact'
 
 const store = useContactsStore()
 const showForm = ref(false)

@@ -136,17 +136,10 @@
 
     <ContactForm
       v-if="store.showEditModal"
-      :contact="store.selectedContact"
+      :contact="store.selectedContact || undefined"
       :show="store.showEditModal"
       @close="store.closeEditModal"
       @save="handleEditContact"
-    />
-
-    <ContactForm
-      v-if="store.showNewContactModal"
-      :show="store.showNewContactModal"
-      @close="store.closeNewContactModal"
-      @save="handleNewContact"
     />
 
     <DeleteConfirmation
@@ -160,7 +153,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { onMounted } from 'vue'
 import { useContactsStore } from '../stores/contacts'
 import type { Contact } from '../types/contact'
 import ContactDetails from './contacts/ContactDetails.vue'

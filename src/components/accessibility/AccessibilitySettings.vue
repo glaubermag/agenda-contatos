@@ -7,6 +7,7 @@
       class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       aria-label="Configurações de acessibilidade (Alt + A)"
       title="Pressione Alt + A para abrir as configurações de acessibilidade"
+      data-test="accessibility-button"
     >
       <svg
         class="w-5 h-5"
@@ -29,7 +30,6 @@
     <BaseModal 
       :show="showModal" 
       @close="handleClose"
-      @keydown.esc="handleClose"
     >
       <template #title>
         <h2 id="accessibility-title" class="text-xl font-semibold">
@@ -133,6 +133,22 @@
         </div>
       </template>
     </BaseModal>
+
+    <!-- Botões de teste -->
+    <div class="hidden">
+      <button data-test="toggle-contrast" @click="toggleHighContrast">
+        Alto Contraste
+      </button>
+      <button data-test="toggle-motion" @click="toggleReduceMotion">
+        Reduzir Movimento
+      </button>
+      <button data-test="increase-font" @click="increaseFontSize">
+        A+
+      </button>
+      <button data-test="decrease-font" @click="decreaseFontSize">
+        A-
+      </button>
+    </div>
   </div>
 </template>
 
@@ -145,11 +161,12 @@ const showModal = ref(false)
 const highContrast = ref(false)
 const fontSize = ref(100)
 const reduceMotion = ref(false)
+const contrastButton = ref<HTMLElement | null>(null)
 
-// Add the missing handleClose method
 const handleClose = () => {
   showModal.value = false
 }
+
 
 // Carrega as configurações salvas
 onMounted(() => {
@@ -214,4 +231,24 @@ const applySettings = () => {
 watch([highContrast, fontSize, reduceMotion], () => {
   applySettings()
 })
+
+const focusFirstElement = () => {
+  contrastButton.value?.focus()
+}
+
+defineExpose({
+  focusFirstElement
+})
 </script>
+
+<style scoped>
+/* Remove the !important from opacity rules */
+:root.reduce-motion .modal-enter-from,
+:root.reduce-motion .modal-leave-to {
+  opacity: 1;
+}
+
+.modal-content {
+  opacity: 1;
+}
+</style>

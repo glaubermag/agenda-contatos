@@ -6,8 +6,8 @@
     
     <template #content>
       <form @submit.prevent="handleSubmit" class="space-y-6">
-        <!-- Informações básicas -->
-        <div class="space-y-4">
+        <!-- Grid para informações básicas -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700">Nome</label>
             <input
@@ -52,7 +52,7 @@
             />
           </div>
 
-          <div>
+          <div class="md:col-span-2">
             <label for="website" class="block text-sm font-medium text-gray-700">Website</label>
             <input
               id="website"
@@ -65,87 +65,89 @@
           </div>
         </div>
 
-        <!-- Endereço -->
+        <!-- Grid para endereço -->
         <div class="space-y-4">
           <h4 class="font-medium text-gray-900">Endereço</h4>
-          
-          <div>
-            <label for="street" class="block text-sm font-medium text-gray-700">Rua</label>
-            <input
-              id="street"
-              v-model="form.address.street"
-              type="text"
-              required
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
-          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label for="street" class="block text-sm font-medium text-gray-700">Rua</label>
+              <input
+                id="street"
+                v-model="form.address.street"
+                type="text"
+                required
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
-          <div>
-            <label for="suite" class="block text-sm font-medium text-gray-700">Complemento</label>
-            <input
-              id="suite"
-              v-model="form.address.suite"
-              type="text"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
-          </div>
+            <div>
+              <label for="suite" class="block text-sm font-medium text-gray-700">Complemento</label>
+              <input
+                id="suite"
+                v-model="form.address.suite"
+                type="text"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
-          <div>
-            <label for="city" class="block text-sm font-medium text-gray-700">Cidade</label>
-            <input
-              id="city"
-              v-model="form.address.city"
-              type="text"
-              required
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
-          </div>
+            <div>
+              <label for="city" class="block text-sm font-medium text-gray-700">Cidade</label>
+              <input
+                id="city"
+                v-model="form.address.city"
+                type="text"
+                required
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
-          <div>
-            <label for="zipcode" class="block text-sm font-medium text-gray-700">CEP</label>
-            <input
-              id="zipcode"
-              v-model="form.address.zipcode"
-              type="text"
-              required
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
+            <div>
+              <label for="zipcode" class="block text-sm font-medium text-gray-700">CEP</label>
+              <input
+                id="zipcode"
+                v-model="form.address.zipcode"
+                type="text"
+                required
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
           </div>
         </div>
 
-        <!-- Empresa -->
+        <!-- Grid para empresa -->
         <div class="space-y-4">
           <h4 class="font-medium text-gray-900">Empresa</h4>
-          
-          <div>
-            <label for="companyName" class="block text-sm font-medium text-gray-700">Nome da Empresa</label>
-            <input
-              id="companyName"
-              v-model="form.company.name"
-              type="text"
-              required
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
-          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="md:col-span-2">
+              <label for="companyName" class="block text-sm font-medium text-gray-700">Nome da Empresa</label>
+              <input
+                id="companyName"
+                v-model="form.company.name"
+                type="text"
+                required
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
-          <div>
-            <label for="catchPhrase" class="block text-sm font-medium text-gray-700">Slogan</label>
-            <input
-              id="catchPhrase"
-              v-model="form.company.catchPhrase"
-              type="text"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
-          </div>
+            <div>
+              <label for="catchPhrase" class="block text-sm font-medium text-gray-700">Slogan</label>
+              <input
+                id="catchPhrase"
+                v-model="form.company.catchPhrase"
+                type="text"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
 
-          <div>
-            <label for="bs" class="block text-sm font-medium text-gray-700">BS</label>
-            <input
-              id="bs"
-              v-model="form.company.bs"
-              type="text"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
+            <div>
+              <label for="bs" class="block text-sm font-medium text-gray-700">BS</label>
+              <input
+                id="bs"
+                v-model="form.company.bs"
+                type="text"
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              />
+            </div>
           </div>
         </div>
 
@@ -171,7 +173,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import type { Contact } from '../../types/contact'
 import BaseModal from '../base/BaseModal.vue'
 
@@ -219,13 +221,10 @@ watch(() => props.contact, (newContact) => {
   }
 }, { immediate: true })
 
-const urlPattern = '^(https?:\\/\\/)?(([\\da-z\\.-]+)\\.([a-z\\.]{2,6})([\\/\\w \\.-]*)*\\/?$'
-
 const handleWebsiteInput = (event: Event) => {
   const input = event.target as HTMLInputElement
   let value = input.value.trim()
   
-  // Se não começar com http:// ou https://, adiciona https://
   if (value && !value.match(/^https?:\/\//)) {
     value = 'https://' + value
   }

@@ -7,92 +7,142 @@
     <template #content>
       <div class="space-y-6">
         <!-- Informações básicas -->
-        <div>
-          <h4 class="text-sm font-medium text-gray-500">Informações Básicas</h4>
-          <dl class="mt-2 space-y-3">
-            <div>
-              <dt class="text-sm font-medium text-gray-500">Nome</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ contact.name }}</dd>
-            </div>
-            <div>
-              <dt class="text-sm font-medium text-gray-500">Nome de usuário</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ contact.username }}</dd>
-            </div>
-            <div>
-              <dt class="text-sm font-medium text-gray-500">Email</dt>
-              <dd class="mt-1 text-sm text-gray-900">
-                <a :href="'mailto:' + contact.email" class="text-blue-600 hover:text-blue-800">
-                  {{ contact.email }}
-                </a>
-              </dd>
-            </div>
-            <div>
-              <dt class="text-sm font-medium text-gray-500">Telefone</dt>
-              <dd class="mt-1 text-sm text-gray-900">
-                <a :href="'tel:' + contact.phone" class="text-blue-600 hover:text-blue-800">
-                  {{ contact.phone }}
-                </a>
-              </dd>
-            </div>
-            <div>
-              <dt class="text-sm font-medium text-gray-500">Website</dt>
-              <dd class="mt-1 text-sm text-gray-900">
-                <a :href="contact.website.startsWith('http') ? contact.website : 'https://' + contact.website" 
-                   target="_blank" 
-                   rel="noopener noreferrer"
-                   class="text-blue-600 hover:text-blue-800"
-                >
-                  {{ contact.website }}
-                </a>
-              </dd>
-            </div>
-          </dl>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Nome</label>
+            <input
+              type="text"
+              :value="contact.name"
+              readonly
+              class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Nome de usuário</label>
+            <input
+              type="text"
+              :value="contact.username"
+              readonly
+              class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <input
+              type="email"
+              :value="contact.email"
+              readonly
+              class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Telefone</label>
+            <input
+              type="tel"
+              :value="contact.phone"
+              readonly
+              class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+            />
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700">Website</label>
+            <input
+              type="text"
+              :value="contact.website"
+              readonly
+              class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+            />
+          </div>
         </div>
 
         <!-- Endereço -->
-        <div>
-          <h4 class="text-sm font-medium text-gray-500">Endereço</h4>
-          <dl class="mt-2 space-y-3">
+        <div class="space-y-4">
+          <h4 class="font-medium text-gray-900">Endereço</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <dt class="text-sm font-medium text-gray-500">Rua</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ contact.address.street }}</dd>
+              <label class="block text-sm font-medium text-gray-700">Rua</label>
+              <input
+                type="text"
+                :value="contact.address.street"
+                readonly
+                class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+              />
             </div>
+
             <div>
-              <dt class="text-sm font-medium text-gray-500">Complemento</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ contact.address.suite }}</dd>
+              <label class="block text-sm font-medium text-gray-700">Complemento</label>
+              <input
+                type="text"
+                :value="contact.address.suite"
+                readonly
+                class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+              />
             </div>
+
             <div>
-              <dt class="text-sm font-medium text-gray-500">Cidade</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ contact.address.city }}</dd>
+              <label class="block text-sm font-medium text-gray-700">Cidade</label>
+              <input
+                type="text"
+                :value="contact.address.city"
+                readonly
+                class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+              />
             </div>
+
             <div>
-              <dt class="text-sm font-medium text-gray-500">CEP</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ contact.address.zipcode }}</dd>
+              <label class="block text-sm font-medium text-gray-700">CEP</label>
+              <input
+                type="text"
+                :value="contact.address.zipcode"
+                readonly
+                class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+              />
             </div>
-          </dl>
+          </div>
         </div>
 
         <!-- Empresa -->
-        <div>
-          <h4 class="text-sm font-medium text-gray-500">Empresa</h4>
-          <dl class="mt-2 space-y-3">
-            <div>
-              <dt class="text-sm font-medium text-gray-500">Nome</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ contact.company.name }}</dd>
+        <div class="space-y-4">
+          <h4 class="font-medium text-gray-900">Empresa</h4>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-gray-700">Nome da Empresa</label>
+              <input
+                type="text"
+                :value="contact.company.name"
+                readonly
+                class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+              />
             </div>
+
             <div>
-              <dt class="text-sm font-medium text-gray-500">Slogan</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ contact.company.catchPhrase }}</dd>
+              <label class="block text-sm font-medium text-gray-700">Slogan</label>
+              <input
+                type="text"
+                :value="contact.company.catchPhrase"
+                readonly
+                class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+              />
             </div>
+
             <div>
-              <dt class="text-sm font-medium text-gray-500">BS</dt>
-              <dd class="mt-1 text-sm text-gray-900">{{ contact.company.bs }}</dd>
+              <label class="block text-sm font-medium text-gray-700">BS</label>
+              <input
+                type="text"
+                :value="contact.company.bs"
+                readonly
+                class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500 cursor-default"
+              />
             </div>
-          </dl>
+          </div>
         </div>
 
-        <!-- Botões -->
-        <div class="flex justify-end space-x-3">
+        <!-- Botão de fechar -->
+        <div class="flex justify-end">
           <button
             type="button"
             @click="$emit('close')"
@@ -118,4 +168,4 @@ defineProps<{
 defineEmits<{
   (e: 'close'): void
 }>()
-</script> 
+</script>
