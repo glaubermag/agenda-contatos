@@ -1,0 +1,10 @@
+.reduce-motion .modal-enter-active,
+.reduce-motion .modal-leave-active {
+  transition: none;
+}
+
+.reduce-motion .modal-enter-from,
+.reduce-motion .modal-leave-to {
+  opacity: 1;
+  transform: none;
+}

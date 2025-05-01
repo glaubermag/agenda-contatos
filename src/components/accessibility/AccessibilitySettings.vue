@@ -32,33 +32,21 @@
       @keydown.esc="handleClose"
     >
       <template #title>
-        <div class="flex items-center justify-between">
-          <h2 id="accessibility-title" class="text-xl font-semibold">
-            Configurações de Acessibilidade
-          </h2>
-          <button
-            @click="handleClose"
-            class="text-gray-400 hover:text-gray-500"
-            aria-label="Fechar configurações de acessibilidade"
-          >
-            <span class="sr-only">Fechar</span>
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
+        <h2 id="accessibility-title" class="text-xl font-semibold">
+          Configurações de Acessibilidade
+        </h2>
       </template>
       
       <template #content>
         <div 
-          class="space-y-6"
+          class="space-y-6 mt-4"
           role="group"
           aria-labelledby="accessibility-title"
         >
           <!-- Alto Contraste com feedback sonoro -->
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-lg font-medium text-gray-900">Alto Contraste</h3>
+              <h3 class="text-lg font-medium">Alto Contraste</h3>
               <p class="text-sm text-gray-500">
                 Aumenta o contraste das cores para melhor visualização
                 <span class="sr-only">
@@ -69,10 +57,7 @@
             <button
               @click="toggleHighContrast"
               @keydown.enter="toggleHighContrast"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
-                highContrast ? 'bg-blue-600' : 'bg-gray-200'
-              ]"
+              class="switch-container"
               role="switch"
               :aria-checked="highContrast"
               aria-label="Alternar alto contraste"
@@ -81,10 +66,7 @@
                 {{ highContrast ? 'Desativar' : 'Ativar' }} alto contraste
               </span>
               <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  highContrast ? 'translate-x-5' : 'translate-x-0'
-                ]"
+                class="switch-indicator"
                 aria-hidden="true"
               />
             </button>
@@ -92,18 +74,18 @@
 
           <!-- Controles de fonte com feedback -->
           <div>
-            <h3 class="text-lg font-medium text-gray-900 mb-2">Tamanho da Fonte</h3>
+            <h3 class="text-lg font-medium mb-2">Tamanho da Fonte</h3>
             <div class="flex items-center space-x-4" role="group" aria-label="Controles de tamanho da fonte">
               <button
                 @click="decreaseFontSize"
-                class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500"
+                class="font-control-button p-2 rounded-lg bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500"
                 aria-label="Diminuir tamanho da fonte"
                 :disabled="fontSize <= 80"
               >
                 <span aria-hidden="true">A-</span>
               </button>
               <span 
-                class="text-lg font-medium"
+                class="font-size-display text-lg font-medium"
                 role="status"
                 aria-live="polite"
               >
@@ -111,7 +93,7 @@
               </span>
               <button
                 @click="increaseFontSize"
-                class="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500"
+                class="font-control-button p-2 rounded-lg bg-gray-100 hover:bg-gray-200 focus:ring-2 focus:ring-blue-500"
                 aria-label="Aumentar tamanho da fonte"
                 :disabled="fontSize >= 150"
               >
@@ -123,7 +105,7 @@
           <!-- Redução de movimento com feedback -->
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-lg font-medium text-gray-900">Reduzir Animações</h3>
+              <h3 class="text-lg font-medium">Reduzir Animações</h3>
               <p class="text-sm text-gray-500">
                 Remove animações e transições
                 <span class="sr-only">
@@ -134,10 +116,7 @@
             <button
               @click="toggleReduceMotion"
               @keydown.enter="toggleReduceMotion"
-              :class="[
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
-                reduceMotion ? 'bg-blue-600' : 'bg-gray-200'
-              ]"
+              class="switch-container"
               role="switch"
               :aria-checked="reduceMotion"
               aria-label="Alternar redução de movimento"
@@ -146,10 +125,7 @@
                 {{ reduceMotion ? 'Desativar' : 'Ativar' }} redução de movimento
               </span>
               <span
-                :class="[
-                  'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
-                  reduceMotion ? 'translate-x-5' : 'translate-x-0'
-                ]"
+                class="switch-indicator"
                 aria-hidden="true"
               />
             </button>

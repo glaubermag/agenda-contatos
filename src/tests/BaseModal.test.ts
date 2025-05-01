@@ -50,4 +50,21 @@ describe('BaseModal', () => {
     expect(wrapper.find('#modal-title').text()).toBe('Modal Title')
     expect(wrapper.text()).toContain('Modal Content')
   })
+
+  it('should maintain visibility when reduce motion is enabled', () => {
+    document.documentElement.classList.add('reduce-motion')
+    
+    const wrapper = mount(BaseModal, {
+      props: {
+        show: true
+      }
+    })
+
+    const dialog = wrapper.find('[role="dialog"]')
+    expect(dialog.exists()).toBe(true)
+    expect(dialog.classes()).not.toContain('opacity-0')
+    
+    // Clean up
+    document.documentElement.classList.remove('reduce-motion')
+  })
 })

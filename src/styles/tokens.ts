@@ -6,6 +6,11 @@ export const tokens = {
       600: '#2563eb',
       700: '#1d4ed8'
     },
+    secondary: {
+      DEFAULT: '#6B7280',
+      light: '#9CA3AF',
+      dark: '#4B5563'
+    },
     gray: {
       50: '#f9fafb',
       100: '#f3f4f6',

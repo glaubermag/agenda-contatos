@@ -1,69 +1,76 @@
 <template>
-  <Transition name="modal">
-    <div 
-      v-if="show" 
-      class="fixed inset-0 z-50 overflow-y-auto" 
-      role="dialog" 
-      aria-modal="true"
-      aria-labelledby="modal-title"
-      @keydown.esc="$emit('close')"
+  <Teleport to="body">
+    <Transition
+      enter-active-class="ease-out duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="ease-in duration-200"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
     >
-      <div class="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <!-- Overlay -->
-        <div 
-          class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" 
-          aria-hidden="true" 
-          @click="$emit('close')"
-        ></div>
+      <div v-if="show" class="fixed inset-0 z-10">
+        <div class="modal-backdrop fixed inset-0 bg-black bg-opacity-75" @click="$emit('close')" />
+      </div>
+    </Transition>
 
-        <!-- Modal -->
-        <div 
-          ref="modalRef"
-          class="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle"
-          role="document"
-          tabindex="-1"
-        >
-          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-            <div class="sm:flex sm:items-start">
-              <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                <h3 
-                  id="modal-title"
-                  class="text-lg font-medium leading-6 text-gray-900"
-                  tabindex="0"
-                >
-                  <slot name="title"></slot>
-                </h3>
-                <div class="mt-2">
-                  <slot name="content"></slot>
-                </div>
-              </div>
+    <Transition
+      enter-active-class="ease-out duration-300"
+      enter-from-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      enter-to-class="opacity-100 translate-y-0 sm:scale-100"
+      leave-active-class="ease-in duration-200"
+      leave-from-class="opacity-100 translate-y-0 sm:scale-100"
+      leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+    >
+      <div 
+        v-if="show" 
+        class="fixed inset-0 z-20 overflow-y-auto" 
+        @click.self="$emit('close')"
+        @keydown.esc="$emit('close')"
+        ref="modalRef"
+        tabindex="-1"
+      >
+        <div class="flex min-h-full items-center justify-center p-4">
+          <div 
+            class="modal-content relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl sm:my-8 sm:w-full sm:max-w-lg"
+            role="dialog"
+            aria-modal="true"
+          >
+            <!-- Cabeçalho do Modal -->
+            <div class="modal-header border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+              <slot name="title"></slot>
+              <button
+                @click="$emit('close')"
+                class="close text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                aria-label="Fechar modal"
+              >
+                <span class="sr-only">Fechar</span>
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
-          </div>
-          <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-            <button
-              type="button"
-              @click="$emit('close')"
-              class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-              aria-label="Fechar modal"
-            >
-              Fechar
-            </button>
+
+            <!-- Conteúdo do Modal -->
+            <div class="modal-body px-6 py-4">
+              <slot name="content"></slot>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </Transition>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, watch, nextTick, computed } from 'vue'
 
-const props = defineProps({
-  show: {
-    type: Boolean,
-    required: true
-  }
-})
+const props = defineProps<{
+  show: boolean
+}>()
+
+defineEmits<{
+  (e: 'close'): void
+}>()
 
 const modalRef = ref<HTMLElement | null>(null)
 let previousActiveElement: HTMLElement | null = null
@@ -107,6 +114,7 @@ watch(() => props.show, (newValue) => {
   if (newValue) {
     previousActiveElement = document.activeElement as HTMLElement
     nextTick(() => {
+      modalRef.value?.focus()
       const focusableElements = getFocusableElements()
       if (focusableElements.length > 0) {
         focusableElements[0].focus()
@@ -130,17 +138,34 @@ onUnmounted(() => {
     modalRef.value.removeEventListener('keydown', handleTabKey)
   }
 })
+
+// Add reduce motion check
+const reduceMotion = computed(() => {
+  return document.documentElement.classList.contains('reduce-motion')
+})
 </script>
 
 <style scoped>
+/* Estilos base do modal */
 .modal-enter-active,
 .modal-leave-active {
-  transition: all 0.3s ease;
+  transition: opacity 0.3s ease;
 }
 
 .modal-enter-from,
 .modal-leave-to {
   opacity: 0;
-  transform: scale(0.9);
+}
+
+/* Remover apenas as transições quando reduce-motion está ativo */
+:root.reduce-motion .modal-enter-active,
+:root.reduce-motion .modal-leave-active {
+  transition: none;
+}
+
+/* Remover a classe de opacidade 0 quando reduce-motion está ativo */
+:root.reduce-motion .modal-enter-from,
+:root.reduce-motion .modal-leave-to {
+  opacity: 1;
 }
 </style>
