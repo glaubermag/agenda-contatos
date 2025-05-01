@@ -9,5 +9,10 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
-  base: '/agenda-contatos/'
+  base: '/agenda-contatos/',
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    copyPublicDir: true
+  }
 })
