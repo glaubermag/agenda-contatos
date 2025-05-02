@@ -58,8 +58,11 @@
 
             <!-- Conteúdo do Modal -->
             <div class="modal-body px-6 py-4 bg-white">
-              <slot name="content"></slot>
-            </div>
+            <slot name="content"></slot>
+          </div>
+          <div class="modal-footer px-6 py-4 bg-gray-50 border-t border-gray-200">
+            <slot name="footer"></slot>
+          </div>
           </div>
         </div>
       </div>

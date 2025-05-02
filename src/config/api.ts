@@ -1,1 +1,0 @@
-export const API_URL = 'https://glaubermag.dev.br/test/agenda/api.php'

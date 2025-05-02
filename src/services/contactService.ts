@@ -1,8 +1,9 @@
 import type { Contact } from '../types/contact'
 import axios from 'axios'
+const apiUrl = (import.meta as any).env.VITE_API_URL
 
 const api = axios.create({
-  baseURL: 'https://glaubermag.dev.br/test/agenda/api.php',
+  baseURL: apiUrl,
   headers: {
     'Content-Type': 'application/json'
   }
