@@ -19,5 +19,8 @@ export default defineConfig({
         manualChunks: undefined
       }
     }
+  },
+  define: {
+    'import.meta.env.VITE_API_URL': JSON.stringify('https://glaubermag.dev.br/test/agenda/api.php')
   }
 })
