@@ -25,11 +25,15 @@ export const contactService = {
   },
 
   async update(id: number, contact: Partial<Contact>): Promise<Contact> {
-    const { data } = await api.patch<Contact>(`/contacts/${id}`, contact)
+    // Garantir que o ID seja um número e enviar todos os dados necessários
+    const { data } = await api.put<Contact>(`/contacts/${Number(id)}`, {
+      ...contact,
+      id: Number(id)
+    })
     return data
   },
 
   async delete(id: number): Promise<void> {
     await api.delete(`/contacts/${id}`)
   }
-} 
+}
