@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import type { Contact } from '../../types/contact'
 import BaseModal from '../base/BaseModal.vue'
 
