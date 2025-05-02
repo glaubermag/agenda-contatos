@@ -3,9 +3,10 @@
     <!-- Botão de acessibilidade com atalho de teclado -->
     <button
       @click="showModal = true"
-      @keydown.alt.a="showModal = true"
+      @keydown.alt.a.prevent="showModal = true"
       class="flex items-center space-x-2 px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-      aria-label="Configurações de acessibilidade (Alt + A)"
+      aria-label="Configurações de acessibilidade"
+      aria-haspopup="dialog"
       title="Pressione Alt + A para abrir as configurações de acessibilidade"
       data-test="accessibility-button"
     >
