@@ -30,12 +30,14 @@
         role="dialog"
         aria-modal="true"
         :aria-labelledby="modalTitleId"
+        @keydown="handleTabKey"
       >
         <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <div 
             class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6"
             ref="modalContent"
             @click.stop
+            tabindex="-1"
           >
             <!-- Cabeçalho do Modal -->
             <div class="modal-header border-b border-gray-200 px-6 py-4 flex items-center justify-between">
@@ -80,65 +82,62 @@ const modalContent = ref<HTMLElement | null>(null)
 const modalTitleId = `modal-title-${Math.random().toString(36).substr(2, 9)}`
 const previousActiveElement = ref<HTMLElement | null>(null)
 
+// Função para fechar o modal
 const handleClose = () => {
   emit('close')
 }
 
-const handleKeydown = (e: KeyboardEvent) => {
-  if (e.key === 'Tab') {
-    const focusableElements = modalContent.value?.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    )
-    
-    if (focusableElements && focusableElements.length > 0) {
-      const firstElement = focusableElements[0] as HTMLElement
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
-      
-      if (e.shiftKey && document.activeElement === firstElement) {
-        lastElement.focus()
-        e.preventDefault()
-      } else if (!e.shiftKey && document.activeElement === lastElement) {
-        firstElement.focus()
-        e.preventDefault()
-      }
-    }
-  } else if (e.key === 'Escape' && props.show) {
-    handleClose()
-  }
-}
-
-const focusFirstInput = () => {
-  const firstInput = modalContent.value?.querySelector(
-    'input, button, [tabindex]:not([tabindex="-1"])'
-  )
-  if (firstInput) {
-    (firstInput as HTMLElement).focus()
-  } else {
-    // Fallback para o botão de fechar se nenhum outro elemento for encontrado
-    const closeButton = modalContent.value?.querySelector('.close')
-    if (closeButton) {
-      (closeButton as HTMLElement).focus()
-    }
-  }
-}
-
-watch(() => props.show, (newValue) => {
-  if (newValue) {
+// Captura o elemento ativo antes de abrir o modal
+watch(() => props.show, (newVal) => {
+  if (newVal) {
+    // Salva o elemento que tinha o foco antes de abrir o modal
     previousActiveElement.value = document.activeElement as HTMLElement
-    document.addEventListener('keydown', handleKeydown)
+    
+    // Move o foco para o modal após a renderização
     nextTick(() => {
-      focusFirstInput()
+      if (modalContent.value) {
+        modalContent.value.focus()
+      }
     })
   } else {
-    document.removeEventListener('keydown', handleKeydown)
-    if (previousActiveElement.value) {
-      previousActiveElement.value.focus()
-    }
+    // Restaura o foco ao elemento anterior quando o modal é fechado
+    nextTick(() => {
+      if (previousActiveElement.value) {
+        previousActiveElement.value.focus()
+      }
+    })
   }
-})
+}, { immediate: true })
 
+// Implementação do trap focus
+const handleTabKey = (event: KeyboardEvent) => {
+  if (event.key !== 'Tab' || !modalContent.value) return
+  
+  // Encontra todos os elementos focáveis dentro do modal
+  const focusableElements = modalContent.value.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  )
+  
+  const firstElement = focusableElements[0] as HTMLElement
+  const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement
+  
+  // Se estiver pressionando Shift+Tab e estiver no primeiro elemento, move para o último
+  if (event.shiftKey && document.activeElement === firstElement) {
+    event.preventDefault()
+    lastElement.focus()
+  } 
+  // Se estiver pressionando Tab e estiver no último elemento, move para o primeiro
+  else if (!event.shiftKey && document.activeElement === lastElement) {
+    event.preventDefault()
+    firstElement.focus()
+  }
+}
+
+// Limpa os event listeners quando o componente é desmontado
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeydown)
+  if (previousActiveElement.value) {
+    previousActiveElement.value.focus()
+  }
 })
 </script>
 
