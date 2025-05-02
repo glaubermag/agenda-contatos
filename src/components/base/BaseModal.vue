@@ -34,13 +34,13 @@
       >
         <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <div 
-            class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl sm:p-6"
+            class="relative transform overflow-hidden rounded-lg bg-white px-0 pb-0 pt-0 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-4xl flex flex-col max-h-[90vh]"
             ref="modalContent"
             @click.stop
             tabindex="-1"
           >
-            <!-- Cabeçalho do Modal -->
-            <div class="modal-header border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+            <!-- Cabeçalho do Modal (fixo) -->
+            <div class="modal-header border-b border-gray-200 px-6 py-4 flex items-center justify-between sticky top-0 bg-white z-10">
               <h3 :id="modalTitleId" class="text-lg font-medium text-gray-900">
                 <slot name="title"></slot>
               </h3>
@@ -56,13 +56,15 @@
               </button>
             </div>
 
-            <!-- Conteúdo do Modal -->
-            <div class="modal-body px-6 py-4 bg-white">
-            <slot name="content"></slot>
-          </div>
-          <div class="modal-footer px-6 py-4 bg-gray-50 border-t border-gray-200">
-            <slot name="footer"></slot>
-          </div>
+            <!-- Conteúdo do Modal (scrollável) -->
+            <div class="modal-body px-6 py-4 bg-white overflow-y-auto flex-1" style="min-height:0;">
+              <slot name="content"></slot>
+            </div>
+
+            <!-- Rodapé do Modal (fixo) -->
+            <div class="modal-footer px-6 py-4 bg-gray-50 border-t border-gray-200 sticky bottom-0 z-10">
+              <slot name="footer"></slot>
+            </div>
           </div>
         </div>
       </div>
