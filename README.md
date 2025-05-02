@@ -200,3 +200,156 @@ Para relatório de cobertura:
 ## 📄 Licença
 
 Este projeto está sob a licença MIT. Veja [LICENSE](./LICENSE) para mais detalhes.
+
+## 🔧 API
+
+### Visão Geral
+A API do projeto é construída em PHP e utiliza um arquivo JSON como banco de dados, oferecendo uma solução simples e eficiente para gerenciamento de contatos.
+
+### Configuração da API
+Para utilizar a API, você precisará:
+
+- Um servidor com suporte a PHP 7.4 ou superior  
+- Permissões de escrita para os arquivos:  
+  - `db.json` (666 ou 777)  
+  - `debug.log` (666 ou 777)  
+- Extensões PHP necessárias:  
+  - `json`  
+  - `fileinfo`  
+
+---
+
+### Endpoints Disponíveis
+
+| Método | Endpoint           | Descrição                       | Códigos de Retorno  |
+|--------|--------------------|----------------------------------|---------------------|
+| GET    | `/contacts`        | Lista todos os contatos         | 200                 |
+| GET    | `/contacts/{id}`   | Retorna um contato específico   | 200, 404            |
+| POST   | `/contacts`        | Cria um novo contato            | 201                 |
+| PUT    | `/contacts/{id}`   | Atualiza um contato completamente | 200, 404          |
+| PATCH  | `/contacts/{id}`   | Atualiza um contato parcialmente | 200, 404          |
+| DELETE | `/contacts/{id}`   | Remove um contato               | 204, 404            |
+
+---
+
+### Sistema de Logs
+
+O arquivo `debug.log` registra automaticamente:
+
+- Data e hora da requisição  
+- Método HTTP utilizado  
+- URI acessada  
+- ID do recurso (quando aplicável)  
+- Dados completos em operações PUT  
+- Erros e respostas 404 com IDs disponíveis  
+
+---
+
+### Tratamento de Erros
+
+Respostas de erro incluem:
+
+```json
+{
+  "error": "Contact not found",
+  "requested_id": 123,
+  "available_ids": [1, 2, 3, 4]
+}
+```
+
+---
+
+### Exemplos de Requisições
+
+**Criar Contato (POST)**
+
+```json
+{
+  "name": "João Silva",
+  "email": "joao@exemplo.com",
+  "phone": "(11) 98765-4321",
+  "website": "joaosilva.com.br",
+  "company": {
+    "name": "Empresa XYZ",
+    "catchPhrase": "Inovação é nosso lema",
+    "bs": "Soluções digitais"
+  },
+  "address": {
+    "street": "Rua das Flores",
+    "suite": "Apto 123",
+    "city": "São Paulo",
+    "zipcode": "01234-567",
+    "geo": {
+      "lat": "-23.5505",
+      "lng": "-46.6333"
+    }
+  }
+}
+```
+
+**Atualização Parcial (PATCH)**
+
+```json
+{
+  "name": "João Silva Jr.",
+  "email": "joao.jr@exemplo.com"
+}
+```
+
+---
+
+### Características Técnicas
+
+- IDs são sempre numéricos e auto-incrementais  
+- Conversão automática de IDs para inteiro  
+- Reindexação automática após deleções  
+- Suporte completo a CORS  
+- Validação de tipos de dados  
+- Logs detalhados para debug  
+- Estrutura do arquivo JSON mantida consistente  
+
+---
+
+### Estrutura do Banco de Dados
+
+O arquivo `db.json` mantém a seguinte estrutura:
+
+```json
+{
+  "contacts": [
+    {
+      "id": 1,
+      "name": "Nome do Contato",
+      "email": "email@exemplo.com",
+      "phone": "123456789",
+      "website": "exemplo.com",
+      "company": {
+        "name": "Empresa",
+        "catchPhrase": "Slogan",
+        "bs": "Business"
+      },
+      "address": {
+        "street": "Rua Exemplo",
+        "suite": "Apto 123",
+        "city": "Cidade",
+        "zipcode": "12345-678",
+        "geo": {
+          "lat": "-23.5505",
+          "lng": "-46.6333"
+        }
+      }
+    }
+  ]
+}
+```
+
+---
+
+### Notas de Implementação
+
+- A API cria automaticamente o arquivo `db.json` se não existir  
+- Logs são mantidos em `debug.log` para rastreamento  
+- Todos os IDs são convertidos para inteiro para garantir consistência  
+- CORS está configurado para permitir acesso de qualquer origem  
+- Suporte a requisições OPTIONS para preflight CORS  
+- Respostas sempre incluem cabeçalhos JSON apropriados  
